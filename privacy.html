@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Clearly Drawn — Privacy Policy</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap">
+    <div class="logo">CD</div>
+    <strong>Clearly Drawn</strong>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="terms.html">Terms</a>
+      <a href="privacy.html">Privacy</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <h1>Privacy Policy</h1>
+  <p class="lead">Last updated: 16 October 2026</p>
+
+  <h2>1. The short version</h2>
+  <p>This website is a static page. It does not set cookies, it does not run analytics, and it does not
+  track you. The only personal data Clearly Drawn handles is the data TikTok gives us about the
+  account you deliberately connect, plus the record of the videos we published to it.</p>
+
+  <h2>2. What this website collects</h2>
+  <p>Nothing. There is no sign-up form, no analytics script, no advertising tag and no cookie on any
+  page of this site. When you click "Connect TikTok", your browser leaves this site and goes to
+  TikTok; from that point TikTok's own privacy policy applies to what you see and approve.</p>
+
+  <h2>3. What the publishing service stores</h2>
+  <p>When you connect a TikTok account, TikTok redirects back to this site with an authorisation code.
+  The publishing service exchanges that code for a refresh token and stores it as a secret. Stored
+  alongside it are:</p>
+  <pre>a refresh token          what lets the service request short-lived access tokens for your account
+your TikTok user id       which account the token belongs to
+your public profile       the name and avatar you granted user.info.basic and user.info.profile for
+a publish log             for each video we published: the time, the video URL, and the link TikTok returned</pre>
+
+  <h2>4. What the service does not store</h2>
+  <p>The client secret and the refresh token are never written into this website, into any page you
+  can view, or into the publish log. The service does not store your TikTok password, does not read
+  your direct messages, drafts you have not published, or anything outside the scopes you granted.</p>
+
+  <h2>5. Why we are allowed to hold it</h2>
+  <p>The refresh token is held on the legal basis that you gave it to us, deliberately, to perform the
+  publishing you asked for. We hold it only for as long as you keep the account connected.</p>
+
+  <h2>6. Who else sees it</h2>
+  <p>TikTok does, because the tokens and the videos pass through TikTok's API — that is the point of
+  the integration. Nobody else. We do not sell, rent or share this data with any third party, and
+  there is no advertising or analytics recipient to disclose.</p>
+
+  <h2>7. How long we keep it</h2>
+  <p>The refresh token is kept until you revoke access or the service stops running. The publish log
+  is kept as an operational record of what was published to the account. If you want any of it
+  deleted, ask, and we will delete it — the token can be revoked instantly, and it takes effect
+  immediately.</p>
+
+  <h2>8. How to take it back</h2>
+  <p>Two routes, both immediate:</p>
+  <pre>TikTok app:    Profile → Menu → Settings and privacy → Account → Apps and websites
+               → find Clearly Drawn → remove
+Publishing host: tiktok-mcp auth --revoke</pre>
+  <p>Revoking stops every future post straight away. It does not delete videos that were already
+  published, because those now live in your account on TikTok's own terms.</p>
+
+  <h2>9. AI-generated content</h2>
+  <p>Where TikTok requires AI-generated content to be declared, the publishing service sets the
+  AI-generated flag on the post and you are shown it before confirming. We do not present generated
+  footage as footage of real events.</p>
+
+  <h2>10. Security</h2>
+  <p>The secret lives in the operator's secret store, not in any file this website can serve.
+  Access tokens are short-lived, requested only when a publish runs, and discarded afterwards. The
+  code that runs the publishing pipeline is stored with the rest of the project's source and keeps
+  secrets out of it.</p>
+
+  <h2>11. Children</h2>
+  <p>The service is not directed at children, and a TikTok account belongs to whoever created it. If
+  you believe a child's account has been connected without permission, revoke access and tell us.</p>
+
+  <h2>12. Changes and contact</h2>
+  <p>This policy may be updated; the date at the top is the current version. Questions about it can be
+  raised through the contact route published on this site.</p>
+
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <span>© 2026 Clearly Drawn</span>
+    <a href="terms.html">Terms of Service</a>
+    <a href="privacy.html">Privacy Policy</a>
+  </div>
+</footer>
+</body>
+</html>

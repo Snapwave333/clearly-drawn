@@ -1,0 +1,88 @@
+/* Clearly Drawn — TikTok publisher site */
+:root {
+  --bg: #0d0f14;
+  --panel: #151922;
+  --line: #232a36;
+  --text: #e8ecf3;
+  --dim: #98a2b3;
+  --cyan: #22d3ee;
+  --pink: #f472b6;
+  --ok: #34d399;
+  --warn: #fbbf24;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 16px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+a { color: var(--cyan); }
+.wrap { max-width: 900px; margin: 0 auto; padding: 0 24px 96px; }
+header.site {
+  border-bottom: 1px solid var(--line);
+  padding: 18px 0;
+  margin-bottom: 48px;
+}
+header.site .wrap { padding-bottom: 0; display: flex; align-items: center; gap: 14px; }
+.logo {
+  width: 34px; height: 34px; border-radius: 8px;
+  background: linear-gradient(135deg, var(--cyan), var(--pink));
+  display: grid; place-items: center; font-weight: 700; color: #06121a; font-size: 15px;
+}
+header.site strong { font-size: 17px; letter-spacing: .2px; }
+header.site nav { margin-left: auto; display: flex; gap: 20px; font-size: 14px; }
+h1 { font-size: 40px; line-height: 1.15; margin: 0 0 16px; letter-spacing: -.5px; }
+h2 { font-size: 24px; margin: 56px 0 14px; letter-spacing: -.2px; }
+h3 { font-size: 16px; margin: 28px 0 8px; }
+p { color: #c6cfdb; margin: 0 0 16px; max-width: 68ch; }
+.lead { font-size: 19px; color: var(--dim); }
+.badges { display: flex; gap: 8px; flex-wrap: wrap; margin: 20px 0 32px; }
+.badge {
+  font-size: 12.5px; color: var(--dim); border: 1px solid var(--line);
+  padding: 5px 11px; border-radius: 999px; background: var(--panel);
+}
+.panel {
+  background: var(--panel); border: 1px solid var(--line);
+  border-radius: 12px; padding: 22px; margin: 18px 0;
+}
+.panel h3 { margin-top: 0; }
+label { display: block; font-size: 13px; color: var(--dim); margin: 14px 0 6px; }
+input, select, textarea {
+  width: 100%; background: #0b0e13; color: var(--text);
+  border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px;
+  font: 14px/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+textarea { min-height: 74px; resize: vertical; }
+button {
+  background: var(--cyan); color: #06121a; border: 0; border-radius: 8px;
+  padding: 11px 18px; font: 600 14px/1 inherit; cursor: pointer; margin-top: 16px;
+}
+button.ghost { background: transparent; color: var(--text); border: 1px solid var(--line); }
+button:hover { filter: brightness(1.08); }
+pre {
+  background: #0b0e13; border: 1px solid var(--line); border-radius: 8px;
+  padding: 14px; overflow-x: auto; font-size: 12.5px; line-height: 1.55; color: #b9c4d4;
+}
+code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+ol.steps { counter-reset: s; list-style: none; padding: 0; margin: 20px 0; }
+ol.steps li {
+  counter-increment: s; position: relative; padding-left: 44px; margin-bottom: 18px;
+  color: #c6cfdb;
+}
+ol.steps li::before {
+  content: counter(s); position: absolute; left: 0; top: 0;
+  width: 28px; height: 28px; border-radius: 50%; background: var(--panel);
+  border: 1px solid var(--line); color: var(--cyan);
+  display: grid; place-items: center; font-size: 13px; font-weight: 600;
+}
+ol.steps li b { color: var(--text); display: block; }
+.note { border-left: 3px solid var(--warn); padding: 4px 0 4px 16px; color: var(--dim); font-size: 14px; margin: 18px 0; }
+.status { font-size: 13px; color: var(--dim); margin-top: 12px; }
+.status.ok { color: var(--ok); }
+footer.site { border-top: 1px solid var(--line); margin-top: 64px; padding: 24px 0 0; font-size: 13px; color: var(--dim); }
+footer.site .wrap { padding-bottom: 32px; display: flex; gap: 20px; flex-wrap: wrap; }
+.grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); margin: 20px 0; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 18px; }
+.card b { display: block; margin-bottom: 6px; }
+.card span { font-size: 14px; color: var(--dim); }

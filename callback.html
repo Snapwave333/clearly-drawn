@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Clearly Drawn — authorisation result</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap">
+    <div class="logo">CD</div>
+    <strong>Clearly Drawn</strong>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="terms.html">Terms</a>
+      <a href="privacy.html">Privacy</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <h1>Authorisation result</h1>
+  <p id="verdict" class="lead">Checking the response from TikTok…</p>
+
+  <div class="panel" id="detail">
+    <h3>What happens next</h3>
+    <p id="explain">The publishing service exchanges this code for a refresh token using the client
+    secret, stores the refresh token as a secret on the company's own infrastructure, and then uses it
+    to request short-lived access tokens. The code itself is single-use and expires in 60 minutes.</p>
+    <pre id="raw" hidden></pre>
+  </div>
+
+  <div class="note" id="revoke">
+    You can revoke this access at any time from TikTok: <b>Profile → Menu → Settings and privacy →
+    Account → Apps and websites</b>, or by running <code>tiktok-mcp auth --revoke</code> on the
+    publishing host. Revoking immediately stops every future post.
+  </div>
+
+  <p><a href="index.html">Back to Clearly Drawn</a></p>
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <span>© 2026 Clearly Drawn</span>
+    <a href="terms.html">Terms of Service</a>
+    <a href="privacy.html">Privacy Policy</a>
+  </div>
+</footer>
+
+<script src="assets/config.js"></script>
+<script>
+(function () {
+  var q = new URLSearchParams(window.location.search);
+  var code = q.get('code');
+  var state = q.get('state');
+  var error = q.get('error') || q.get('error_description');
+  var verdict = document.getElementById('verdict');
+  var raw = document.getElementById('raw');
+
+  var expected = null;
+  try { expected = sessionStorage.getItem('cd_oauth_state'); } catch (e) {}
+
+  if (error) {
+    verdict.textContent = 'TikTok did not grant access: ' + error;
+    document.getElementById('detail').hidden = true;
+    document.getElementById('revoke').hidden = true;
+    return;
+  }
+  if (!code) {
+    verdict.textContent = 'No authorisation code in the callback URL.';
+    document.getElementById('detail').hidden = true;
+    return;
+  }
+  if (expected && state && expected !== state) {
+    verdict.textContent = 'State mismatch — this callback was not started by this page. Nothing was granted.';
+    document.getElementById('detail').hidden = true;
+    return;
+  }
+
+  verdict.textContent = 'Access granted. TikTok returned an authorisation code.';
+  verdict.className = 'status ok';
+  raw.hidden = false;
+  raw.textContent =
+    'code: ' + code.slice(0, 12) + '… (single use, expires in 60 minutes)\n' +
+    'state: verified' + (expected ? '' : ' (not verified: storage unavailable)') + '\n' +
+    'scopes granted: ' + ((window.CLEARLY_DRAWN_CONFIG || {}).scopes || []).join(', ');
+})();
+</script>
+
+</body>
+</html>

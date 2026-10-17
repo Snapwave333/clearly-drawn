@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Clearly Drawn — automated TikTok publishing</title>
+<meta name="description" content="Clearly Drawn publishes finished whiteboard short videos to TikTok through TikTok's official Login Kit and Content Posting API.">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap">
+    <div class="logo">CD</div>
+    <strong>Clearly Drawn</strong>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="terms.html">Terms</a>
+      <a href="privacy.html">Privacy</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <h1>Clearly Drawn</h1>
+  <p class="lead">An internal publishing tool that takes a finished short video, connects a TikTok
+  account once, and uploads the video through TikTok's official Content Posting API.</p>
+
+  <div class="badges">
+    <span class="badge">Login Kit</span>
+    <span class="badge">Content Posting API</span>
+    <span class="badge">Direct Post</span>
+    <span class="badge">No third-party uploaders</span>
+  </div>
+
+  <p>Clearly Drawn automates one narrow job: moving a rendered whiteboard short from the
+  render queue to TikTok, with a caption, without anyone opening the TikTok app. Everything a creator
+  normally does by hand — picking the file, writing the caption, choosing who can see it, waiting for
+  the post to go live — happens through TikTok's own documented API, using credentials the creator
+  granted explicitly.</p>
+
+  <h2>How it works</h2>
+  <ol class="steps">
+    <li>
+      <b>You connect your TikTok account once.</b>
+      The button on this page sends you to TikTok's own authorisation screen. You choose which
+      permissions to grant and approve them there — nothing is typed into TikTok on your behalf by
+      anyone else.
+    </li>
+    <li>
+      <b>The publishing service keeps a refresh token.</b>
+      TikTok returns a refresh token to the publishing service, which stores it as a secret and uses
+      it to request short-lived access tokens. The token is never shown to any third party.
+    </li>
+    <li>
+      <b>New videos are posted automatically.</b>
+      When a video finishes rendering, the service uploads the file to TikTok, attaches the caption,
+      waits for TikTok to confirm the post is live, and records the resulting link.
+    </li>
+  </ol>
+
+  <h2>What the tool can and cannot do</h2>
+  <div class="grid">
+    <div class="card"><b>Posts to your own account</b><span>Only the account that granted permission.
+    The tool cannot post anywhere else.</span></div>
+    <div class="card"><b>Uploads files you already have</b><span>It sends a video file that has already
+    been rendered and stored on a verified host.</span></div>
+    <div class="card"><b>Nothing without your approval</b><span>Every run starts with confirmation.
+    Nothing is published silently.</span></div>
+    <div class="card"><b>Cannot read your drafts or DMs</b><span>Only the scopes granted at the
+    authorisation screen are used, and only for publishing.</span></div>
+  </div>
+
+  <h2>Try the integration</h2>
+  <p>This page is the real integration surface. Connecting TikTok below opens TikTok's genuine
+  authorisation screen for this app — it is not a simulation.</p>
+
+  <div class="panel">
+    <h3>1. Connect a TikTok account (Login Kit)</h3>
+    <p style="font-size:14px">Opens <code>tiktok.com/v2/auth/authorize</code> with the scopes this app
+    requests. You approve or deny on TikTok's screen, and TikTok returns to
+    <code>callback.html</code> on this same domain.</p>
+    <button id="connect">Connect TikTok</button>
+    <div class="status" id="connect-status">Client key not configured yet.</div>
+  </div>
+
+  <div class="panel">
+    <h3>2. Preview a publish request (Content Posting API)</h3>
+    <p style="font-size:14px">The publish itself runs from the company's own service, because it needs
+    the client secret. This console builds the exact request the service will send, so you can see
+    precisely what is posted and where it goes before you run the pipeline.</p>
+    <label for="vurl">Public video URL (hosted on a verified domain)</label>
+    <input id="vurl" type="url" placeholder="https://cdn.example.com/shorts/final.mp4">
+    <label for="vtitle">Caption</label>
+    <textarea id="vtitle" placeholder="Caption #hashtag"></textarea>
+    <label for="vpriv">Who can see it</label>
+    <select id="vpriv">
+      <option>PUBLIC_TO_EVERYONE</option>
+      <option>MUTUAL_FOLLOW_FRIENDS</option>
+      <option>FOLLOWER_OF_CREATOR</option>
+      <option>SELF_ONLY</option>
+    </select>
+    <button id="preview" class="ghost">Build request preview</button>
+    <pre id="out" hidden></pre>
+  </div>
+
+  <div class="note">
+    Until TikTok approves this app for Content Posting, every video it uploads stays private no
+    matter which visibility is chosen. The publishing service detects that and asks before switching
+    a post public by hand.
+  </div>
+
+  <h2>Data and permissions</h2>
+  <p>The full list of permissions this app requests, what each one is used for, and how to revoke
+  access, are in the <a href="privacy.html">Privacy Policy</a>. The rules you accept by using the
+  service are in the <a href="terms.html">Terms of Service</a>.</p>
+
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    <span>© 2026 Clearly Drawn</span>
+    <a href="terms.html">Terms of Service</a>
+    <a href="privacy.html">Privacy Policy</a>
+    <a href="https://developers.tiktok.com/">TikTok for Developers</a>
+  </div>
+</footer>
+
+<script src="assets/config.js"></script>
+<script>
+(function () {
+  var cfg = window.CLEARLY_DRAWN_CONFIG || {};
+  var connectBtn = document.getElementById('connect');
+  var status = document.getElementById('connect-status');
+
+  var configured = cfg.clientKey && cfg.clientKey.indexOf('PASTE_') === -1;
+  if (configured) {
+    status.textContent = 'Ready. This will request: ' + cfg.scopes.join(', ');
+    status.className = 'status ok';
+    connectBtn.addEventListener('click', function () {
+      var redirect = encodeURIComponent(cfg.redirectUri);
+      var scope = encodeURIComponent(cfg.scopes.join(','));
+      var state = Array.from(crypto.getRandomValues(new Uint8Array(16)))
+        .map(function (b) { return b.toString(16).padStart(2, '0'); }).join('');
+      try { sessionStorage.setItem('cd_oauth_state', state); } catch (e) {}
+      var url = 'https://www.tiktok.com/v2/auth/authorize/?client_key=' + encodeURIComponent(cfg.clientKey) +
+        '&scope=' + scope + '&response_type=code&redirect_uri=' + redirect + '&state=' + state;
+      window.location.href = url;
+    });
+  }
+
+  document.getElementById('preview').addEventListener('click', function () {
+    var videoUrl = document.getElementById('vurl').value.trim();
+    var title = document.getElementById('vtitle').value;
+    var privacy = document.getElementById('vpriv').value;
+    var out = document.getElementById('out');
+    if (!videoUrl) { out.hidden = false; out.textContent = 'Enter a public https video URL.'; return; }
+    out.hidden = false;
+    out.textContent =
+      'POST https://open.tiktokapis.com/v2/post/publish/video/init/\n' +
+      'Authorization: Bearer <access token, exchanged server-side from TIKTOK_REFRESH_TOKEN>\n' +
+      'Content-Type: application/json; charset=UTF-8\n\n' +
+      JSON.stringify({
+        post_info: {
+          title: title,
+          privacy_level: privacy,
+          disable_duet: false,
+          disable_comment: false,
+          disable_stitch: false
+        },
+        source_info: {
+          source: 'PULL_FROM_URL',
+          video_url: videoUrl
+        }
+      }, null, 2) +
+      '\n\n# TikTok returns a publish_id. The service then polls\n' +
+      '# GET /v2/post/publish/status/fetch/ until the post is live, and records the link.';
+  });
+})();
+</script>
+
+</body>
+</html>
